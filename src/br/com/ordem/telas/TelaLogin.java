@@ -38,6 +38,9 @@ public void logar() {
         if (rs.next()){
             TelaPrincipal principal = new TelaPrincipal();
             principal.setVisible(true);
+            this.dispose(); // fechar tela de login
+            conexao.close(); // fechar conexão co banco de dados
+            
         }else{
             JOptionPane.showMessageDialog(null,"usuários e/ou senha inválido(s)");
         }

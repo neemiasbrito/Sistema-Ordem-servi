@@ -7,6 +7,7 @@ package br.com.ordem.telas;
  
 import java.sql.Connection;
 import br.com.ordem.dal.Conexao;
+import java.awt.Color;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
@@ -32,15 +33,33 @@ public void logar() {
         pst.setString(1, txtUsuario.getText());
         String captura = new String(txtSenha.getPassword());
         pst.setString(2, captura);
-        
+        // a linha abaixo executa a query(consulta)
         rs = pst.executeQuery();
-        
+        // se existir um usuário e senha correspondente
         if (rs.next()){
-            TelaPrincipal principal = new TelaPrincipal();
-            principal.setVisible(true);
-            this.dispose(); // fechar tela de login
-            conexao.close(); // fechar conexão co banco de dados
-            
+            // a linha abaixo obtem o conteúdo do campo perfil da tabela tbusuario
+            // a linha abaixo exibe o conteúdo do campo da tabela
+            String perfil = rs.getString(6);
+            //System.out.println(perfil);
+            // a estrutura abaixo faz o tratamento do perfil do usuário
+
+            if (perfil.equals("admin")){
+                TelaPrincipal principal = new TelaPrincipal();
+                principal.setVisible(true);
+                TelaPrincipal.menRel.setEnabled(true);
+                TelaPrincipal.menCadUsu.setEnabled(true);
+                // essa linha abaixo pega lblusuario e pega do banco de dados e coloca na tela
+                TelaPrincipal.lblUsuario.setText(rs.getString(2));
+                TelaPrincipal.lblUsuario.setForeground(Color.red);
+                this.dispose(); // fechar tela de login
+                //conexao.close(); // fechar conexão co banco de dados
+            }else {
+                TelaPrincipal principal = new TelaPrincipal();
+                principal.setVisible(true);
+                TelaPrincipal.lblUsuario.setText(rs.getString(2));
+                this.dispose();
+            }
+           //
         }else{
             JOptionPane.showMessageDialog(null,"usuários e/ou senha inválido(s)");
         }
